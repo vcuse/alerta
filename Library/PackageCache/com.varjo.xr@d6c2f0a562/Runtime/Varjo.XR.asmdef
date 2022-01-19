@@ -1,0 +1,26 @@
+{
+    "name": "Varjo.XR",
+    "references": [
+        "Unity.XR.Management"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "",
+            "define": "HDRP"
+        },
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "8.0.0",
+            "define": "HDRP_8_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}

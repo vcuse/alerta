@@ -1,0 +1,22 @@
+{
+  "name": "Varjo",
+  "version": "1.0.0",
+  "libraryName": "VarjoUnityXR",
+
+  "displays": [
+    {
+      "id": "VarjoDisplay",
+      "disablesLegacyVr": true
+    }
+  ],
+  "inputs": [
+    {
+      "id": "VarjoInput"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "VarjoSession"
+    }
+  ]
+}
