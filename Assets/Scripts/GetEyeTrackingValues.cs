@@ -9,7 +9,31 @@ using Varjo.XR;
 
 public class GetEyeTrackingValues : MonoBehaviour
 {
-    // Settings
+    /* Eye-tracking values */
+    /* Display */
+    public Vector3 displayPosition;
+    public Quaternion displayRotation;
+    /* Gaze */
+    public VarjoEyeTracking.GazeStatus gazeStatus;
+    public Vector3 gazePosition;
+    public Vector3 gazeForward;
+    /* Left Eye */
+    public VarjoEyeTracking.GazeEyeStatus leftEyeStatus;
+    public Vector3 leftEyePosition;
+    public Vector3 leftEyeForward;
+    public float leftEyePupilSize;
+    /* Right Eye */
+    public VarjoEyeTracking.GazeEyeStatus rightEyeStatus;
+    public Vector3 rightEyePosition;
+    public Vector3 rightEyeForward;
+    public float rightEyePupilSize;
+    /* Focus */
+    public float focusDistance;
+    public float focusStability;
+    /* Focus */
+    public long captureTime;
+
+    /* Settings */
     [Header("Calibration Settings")]
     public VarjoEyeTracking.GazeCalibrationMode calibrationMode = VarjoEyeTracking.GazeCalibrationMode.Fast;
     public KeyCode calibrationRequestKey = KeyCode.Space;
@@ -17,82 +41,109 @@ public class GetEyeTrackingValues : MonoBehaviour
     [Header("XR camera")]
     public Camera XRCamera;
 
-    // Text Components
+    /* Canvas (Text Components) */
+    /* Display */
     [Header("Display (Text Components)")]
-    // Display
-    public Text displayPosition;
-    public Text displayRotation;
+    public Text canvasDisplayPosition;
+    public Text canvasDisplayRotation;
+    /* Gaze */
     [Header("Gaze (Text Components)")]
-    // Gaze
-    public Text gazeStatus;
-    public Text gazePosition;
-    public Text gazeForward;
+    public Text canvasGazeStatus;
+    public Text canvasGazePosition;
+    public Text canvasGazeForward;
+    /* Left Eye */
     [Header("Left Eye (Text Components)")]
-    // Left Eye
-    public Text leftEyeStatus;
-    public Text leftEyePosition;
-    public Text leftEyeForward;
-    public Text leftEyePupilSize;
+    public Text canvasLeftEyeStatus;
+    public Text canvasLeftEyePosition;
+    public Text canvasLeftEyeForward;
+    public Text canvasLeftEyePupilSize;
+    /* Right Eye */
     [Header("Right Eye (Text Components)")]
-    // Right Eye
-    public Text rightEyeStatus;
-    public Text rightEyePosition;
-    public Text rightEyeForward;
-    public Text rightEyePupilSize;
+    public Text canvasRightEyeStatus;
+    public Text canvasRightEyePosition;
+    public Text canvasRightEyeForward;
+    public Text canvasRightEyePupilSize;
+    /* Focus */
     [Header("Focus (Text Components)")]
-    // Focus
-    public Text focusDistance;
-    public Text focusStability;
-    [Header("Capture Tiem (Text Component)")]
-    // Focus
-    public Text captureTime;
-
+    public Text canvasFocusDistance;
+    public Text canvasFocusStability;
+    /* Focus */
+    [Header("Capture Time (Text Component)")]
+    public Text canvasCaptureTime;
 
     private VarjoEyeTracking.GazeData latestGazeCapture;
 
     private void Start()
     {
-        // Request calibration every time the program starts
+        /* Request calibration every time the program starts */
         VarjoEyeTracking.RequestGazeCalibration(calibrationMode);
     }
 
     void Update()
     {
-        // If calibration key is pressed, a calibration request is sent to headset
+        /* If calibration key is pressed, a calibration request is sent to headset */
         if (Input.GetKeyDown(calibrationRequestKey))
         {
             VarjoEyeTracking.RequestGazeCalibration(calibrationMode);
         }
 
-        // Get data from the latest frame captured by the eye
-        // tracking system
+        /* Get data from the latest frame captured by the eye
+         * tracking system */
         latestGazeCapture = VarjoEyeTracking.GetGaze();
-        updateCanvas(latestGazeCapture);
+        updateValues(latestGazeCapture);
     }
 
-    void updateCanvas(VarjoEyeTracking.GazeData gazeCapture)
+    void updateValues(VarjoEyeTracking.GazeData gazeCapture)
     {
         /* Display */
-        displayPosition.text = "Position: " + XRCamera.transform.localPosition.ToString("F3");
-        displayRotation.text = "Rotation: " + XRCamera.transform.localRotation.ToString("F3");
+        displayPosition = XRCamera.transform.localPosition;
+        displayRotation = XRCamera.transform.localRotation;
         /* Gaze */
-        gazeStatus.text = "Status: " + gazeCapture.status;
-        gazePosition.text = "Position (Origin): " + gazeCapture.gaze.origin.ToString("F3");
-        gazeForward.text = "Position (Forward): " + gazeCapture.gaze.forward.ToString("F3");
+        gazeStatus = gazeCapture.status;
+        gazePosition = gazeCapture.gaze.origin;
+        gazeForward = gazeCapture.gaze.forward;
         /* Left Eye */
-        leftEyeStatus.text = "Status: " + gazeCapture.leftStatus;
-        leftEyePosition.text = "Position (Origin): " + gazeCapture.left.origin.ToString("F3");
-        leftEyeForward.text = "Position (Forward): " + gazeCapture.left.forward.ToString("F3");
-        leftEyePupilSize.text = "Pupil Size: " + gazeCapture.leftPupilSize.ToString();
+        leftEyeStatus = gazeCapture.leftStatus;
+        leftEyePosition = gazeCapture.left.origin;
+        leftEyeForward = gazeCapture.left.forward;
+        leftEyePupilSize = gazeCapture.leftPupilSize;
         /* Right Eye */
-        rightEyeStatus.text = "Status: " + gazeCapture.rightStatus;
-        rightEyePosition.text = "Position (Origin): " + gazeCapture.right.origin.ToString("F3");
-        rightEyeForward.text = "Position (Forward): " + gazeCapture.right.forward.ToString("F3");
-        rightEyePupilSize.text = "Pupil Size: " + gazeCapture.rightPupilSize.ToString();
+        rightEyeStatus = gazeCapture.rightStatus;
+        rightEyePosition = gazeCapture.right.origin;
+        rightEyeForward = gazeCapture.right.forward;
+        rightEyePupilSize = gazeCapture.rightPupilSize;
         /* Focus */
-        focusDistance.text = "Distance: " + gazeCapture.focusDistance.ToString();
-        focusStability.text = "Stability: " + gazeCapture.focusStability.ToString();
+        focusDistance = gazeCapture.focusDistance;
+        focusStability = gazeCapture.focusStability;
         /* Capture Time */
-        captureTime.text = "Capture Time: " + (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond).ToString();
+        captureTime = (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
+
+        updateCanvas();
+    }
+
+    void updateCanvas()
+    {
+        /* Display */
+        canvasDisplayPosition.text = "Position: " + displayPosition.ToString("F3");
+        canvasDisplayRotation.text = "Rotation: " + displayRotation.ToString("F3");
+        /* Gaze */
+        canvasGazeStatus.text = "Status: " + gazeStatus;
+        canvasGazePosition.text = "Position (Origin): " + gazePosition.ToString("F3");
+        canvasGazeForward.text = "Position (Forward): " + gazeForward.ToString("F3");
+        /* Left Eye */
+        canvasLeftEyeStatus.text = "Status: " + leftEyeStatus;
+        canvasLeftEyePosition.text = "Position (Origin): " + leftEyePosition.ToString("F3");
+        canvasLeftEyeForward.text = "Position (Forward): " + leftEyeForward.ToString("F3");
+        canvasLeftEyePupilSize.text = "Pupil Size: " + leftEyePupilSize.ToString();
+        /* Right Eye */
+        canvasRightEyeStatus.text = "Status: " + rightEyeStatus;
+        canvasRightEyePosition.text = "Position (Origin): " + rightEyePosition.ToString("F3");
+        canvasRightEyeForward.text = "Position (Forward): " + rightEyeForward.ToString("F3");
+        canvasRightEyePupilSize.text = "Pupil Size: " + rightEyePupilSize.ToString();
+        /* Focus */
+        canvasFocusDistance.text = "Distance: " + focusDistance.ToString();
+        canvasFocusStability.text = "Stability: " + focusStability.ToString();
+        /* Capture Time */
+        canvasCaptureTime.text = "Capture Time: " + captureTime.ToString();
     }
 }
